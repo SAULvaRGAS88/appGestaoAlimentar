@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert, ImageBackground, Dimensions, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Alert, ImageBackground, Dimensions, SafeAreaView, Platform, BackHandler } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
+import { TextInput } from 'react-native-paper';
 
 export const TelaLogin = () => {
     const [email, setEmail] = useState('');
@@ -21,6 +22,24 @@ export const TelaLogin = () => {
         Alert.alert('Recuperar senha', 'Envie um e-mail para o Administrador para recuperar a senha.\nexample@example.com');
     };
 
+    const sairApp = () => {
+        Alert.alert(
+          'Sair',
+          'Deseja realmente sair?',
+          [
+            {
+              text: 'Cancelar',
+              style: 'cancel',
+            },
+            {
+              text: 'Sair',
+              onPress: () => BackHandler.exitApp(), // Fecha o app no Android
+            },
+          ],
+          { cancelable: false }
+        );
+      };
+
     return (
         <SafeAreaView style={styles.safeArea}>
             <ImageBackground
@@ -35,21 +54,31 @@ export const TelaLogin = () => {
                         <Ionicons name="mail-outline" size={24} color="#007BFF" />
                         <TextInput
                             style={styles.input}
-                            placeholder="E-mail"
                             value={email}
                             onChangeText={setEmail}
                             keyboardType="email-address"
                             autoCapitalize="none"
+                            mode='outline'
+                            activeUnderlineColor='#007BFF'
+                            outlineColor='#007BFF'
+                            label={'E-mail'}
+                            cursorColor='white'
+                            textColor='white'
                         />
                     </View>
                     <View style={styles.inputContainer}>
                         <Ionicons name="lock-closed-outline" size={24} color="#007BFF" />
                         <TextInput
                             style={styles.input}
-                            placeholder="Senha"
                             value={password}
                             onChangeText={setPassword}
                             secureTextEntry={true}
+                            activeUnderlineColor='#007BFF'
+                            mode='outline'
+                            label={'Senha'}
+                            cursorColor='white'
+                            textColor='white'
+
                         />
                     </View>
                     <TouchableOpacity style={styles.button} onPress={handleLogin}>
@@ -57,6 +86,10 @@ export const TelaLogin = () => {
                     </TouchableOpacity>
                     <TouchableOpacity onPress={recuperarSenha}>
                         <Text style={styles.link}>Esqueci minha senha</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={sairApp}>
+                        <Text style={styles.linkSair}>Sair da Aplicação</Text>
                     </TouchableOpacity>
                 </View>
             </ImageBackground>
@@ -85,13 +118,11 @@ const styles = StyleSheet.create({
         fontSize: 28,
         fontWeight: 'bold',
         marginVertical: 20,
-        color: '#007BFF',
+        color: '#FFF',
     },
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
         marginBottom: 20,
         width: '100%',
         paddingVertical: 10,
@@ -100,7 +131,8 @@ const styles = StyleSheet.create({
         flex: 1,
         marginLeft: 10,
         fontSize: 16,
-        color: '#007BFF',
+        color: 'red',
+        backgroundColor: 'transparent',
     },
     button: {
         backgroundColor: '#007BFF',
@@ -117,8 +149,13 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     link: {
-        color: '#007BFF',
+        color: '#FFF',
         marginTop: 15,
         fontSize: 16,
     },
+    linkSair: {
+        color: 'gray',
+        marginTop: 15,
+        fontSize: 12,
+    }
 });

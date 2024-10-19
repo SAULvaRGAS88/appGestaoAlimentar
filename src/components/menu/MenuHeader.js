@@ -16,11 +16,15 @@ export const MenuHeader = () => {
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity onPress={abrirModal} style={styles.btnMenu}>
-                <Ionicons name="menu-outline" size={25} color="white" />
-            </TouchableOpacity>
 
-            <Text style={styles.title}>Menu</Text>
+            <View style={styles.containerBtn}>
+                <TouchableOpacity onPress={abrirModal} style={styles.btnMenu}>
+                    <Ionicons name="menu" size={30} color="white" />
+                </TouchableOpacity>
+
+                <Text style={styles.title}>Menu</Text>
+            </View>
+
 
             <ModalMenuHeader visible={modalVisible} onClose={fecharModal} />
         </View>
@@ -49,5 +53,9 @@ const styles = StyleSheet.create({
     },
     btnMenu: {
         marginLeft: 20,
+    },
+    containerBtn: {
+        flexDirection: 'row',
+        alignItems: 'center',
     },
 });

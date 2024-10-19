@@ -8,19 +8,14 @@ export const TelaHome = () => {
 
     const navigate = useNavigation();
 
-    const handleAlimentacao = () => {
-        console.log('Alimentação')
-        navigate.navigate('TelaAlimentacao')
-    }
+   
 
 
     return (
         <SafeAreaView style={styles.container}>
             <MenuHeader />
             <View>
-                <TouchableOpacity onPress={() => { handleAlimentacao() }} style={styles.btnAlimentacao}>
-                    <Text>Alimentação</Text>
-                </TouchableOpacity>
+                
             </View>
         </SafeAreaView>
     )
