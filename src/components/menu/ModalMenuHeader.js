@@ -28,10 +28,19 @@ export const ModalMenuHeader = ({ visible, onClose }) => {
         }
         // onClose();
     };
+
     const handleAtivadadeFisica = () => {
         if (route.name !== 'TelaAlimentacao') {
             // navigate.navigate('TelaAlimentacao');
             Alert.alert('Atividade Física', 'Em desenvolvimento',)
+        }
+        // onClose();
+    };
+
+    const handleConfig = () => {
+        if (route.name !== 'TelaAlimentacao') {
+            // navigate.navigate('TelaAlimentacao');
+            Alert.alert('Tela de Configuracoes', 'Em desenvolvimento',)
         }
         // onClose();
     };
@@ -76,6 +85,11 @@ export const ModalMenuHeader = ({ visible, onClose }) => {
                                 <TouchableOpacity style={styles.btnMenu} onPress={handleAtivadadeFisica}>
                                     <Ionicons name="arrow-forward-sharp" size={25} color="#007BFF" />
                                     <Text style={styles.buttonTextMenu}>Atividade Física</Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity style={styles.btnMenu} onPress={handleConfig}>
+                                    <Ionicons name="arrow-forward-sharp" size={25} color="#007BFF" />
+                                    <Text style={styles.buttonTextMenu}>Configurações</Text>
                                 </TouchableOpacity>
 
                                 <TouchableOpacity style={styles.btnMenu} onPress={handleSair}>
