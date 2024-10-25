@@ -1,0 +1,12 @@
+Aqui chaves de Acesso:
+
+Acesso a api do gemini-pro
+MY_API_KEY = 'xxxxxxxxxxxxxx'
+
+Acsso as propriedades do FireBase
+API_KEY = 'xxxxxxxxxxxxxx'
+AUTH_DOMAIN = 'xxxxxxxxxxxxxx'
+PROJECT_ID = 'xxxxxxxxxxxxxx'
+STORAGE_BUCKET = 'xxxxxxxxxxxxxx'
+MESSAGING_SENDER_ID = 'xxxxxxxxxxxxxx'
+APP_ID = 'xxxxxxxxxxxxxx'

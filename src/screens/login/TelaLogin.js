@@ -1,43 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Alert, ImageBackground, Dimensions, SafeAreaView, Platform, BackHandler, Button, } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Alert, ImageBackground, SafeAreaView, BackHandler, } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { TextInput } from 'react-native-paper';
-import { AcessoUsuario } from './AcessoUsuario';
 import { ActivityIndicator } from 'react-native-paper';
-import { servicoBancodados } from '../../services/ServicoBancodados';
-import { exportDatabase } from '../../services/ExportDataBase';
-import * as SQLite from 'expo-sqlite';
+import { RetornaLogin } from '../../services/RetornaLogin';
 
-const database = SQLite.openDatabaseAsync('appGestaoAlimentar.db');
 
 export const TelaLogin = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
-    const [passwordVisible, setPasswordVisible] = useState(null);
-    const [returnDadosLogin, setReturnDadosLogin] = useState({});
     const navigate = useNavigation();
 
     const handleLogin = async () => {
         try {
 
-            console.log('passwordVisible', passwordVisible);
-            if (!passwordVisible) {
-                setLoading(true);
-                const acesso = await AcessoUsuario(email, password);
+            setLoading(true);
+            const acesso = await RetornaLogin(email, password);
 
-                if (acesso && acesso.data && acesso.data[0].attributes.senha === password) {
-                    console.log('acesso', acesso.data[0].attributes.senha);
-                    handleLoginSuccess('', email, password);
-                    // navigate.navigate('TelaHome');
-                } else {
-                    Alert.alert('Erro', 'E-mail ou senha inválidos');
-                }
+            if (acesso !== null) {
+                console.log('Acessando a tela home');
+                navigate.navigate('TelaHome');
             } else {
-                console.log('returnDadosLogin', returnDadosLogin); 
+                Alert.alert('Erro', 'E-mail ou senha inválidos');
             }
-
 
         } catch (err) {
             console.log(err, 'erro ao logar');
@@ -45,36 +32,6 @@ export const TelaLogin = () => {
             setLoading(false);
         }
     };
-
-    /**Função para verificar se dados de login já estão salvos no banco interno ao Entrar no App */
-    useEffect(() => {
-        const checkLoginData = async () => {
-            try {
-                const firstRow = (await database).getFirstAsync('SELECT senha, email FROM Usuario');
-                console.log(firstRow?.id, firstRow?.value, firstRow?.intValue);
-                if (firstRow?.id !== undefined) {
-                    setPasswordVisible(true)
-                    setReturnDadosLogin(firstRow)
-                } else {
-                    setPasswordVisible(false)
-                }
-            } catch (err) {
-                console.log(err, 'erro ao logar');
-                throw err;
-            }
-        };
-        servicoBancodados(database);
-        checkLoginData(); 
-    }, []);
-
-    const handleLoginSuccess = async (nome, email, password) => {
-        
-            const database = await SQLite.openDatabaseAsync('appGestaoAlimentar.db');
-            console.log('Database opened:', database);
-    
-    };
-    
-
 
 
     const recuperarSenha = () => {
@@ -156,11 +113,6 @@ export const TelaLogin = () => {
                     <TouchableOpacity onPress={sairApp}>
                         <Text style={styles.linkSair}>Sair da Aplicação</Text>
                     </TouchableOpacity>
-
-                    <View style={styles.buttonContainer}>
-                        <Button title="Exportar Banco de Dados" onPress={exportDatabase} style={styles.button} />
-                    </View>
-
 
                 </View>
             </ImageBackground>
