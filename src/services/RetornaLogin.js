@@ -6,16 +6,16 @@ export const RetornaLogin = async (email, senha) => {
     try {
         const querySnapshot = await getDocs(collection(db, 'usuario'));
         const usuariosArray = querySnapshot.docs.map(doc => ({
-            id: doc.id, // adiciona o ID do documento
-            ...doc.data(), // adiciona os dados do documento
+            id: doc.id, 
+            ...doc.data(), 
         }));
 
         // Filtra o usuário com base no email e senha
         const usuario = usuariosArray.find(user => user.email === email && user.senha === senha);
-        return usuario || null; // Retorna o usuário encontrado ou null se não houver
+        return usuario || null; 
     } catch (err) {
         console.error('Erro ao buscar dados:', err);
-        return null; // Retorna null em caso de erro
+        return null;
     } finally {
        
     }

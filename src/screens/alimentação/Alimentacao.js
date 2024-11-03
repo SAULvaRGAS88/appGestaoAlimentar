@@ -5,19 +5,21 @@ import { MenuHeader } from '../../components/menu/MenuHeader';
 import { ArrayTextoEsperaIA } from '../../services/ArrayTextoEsperaIA';
 import { TratamentoText } from './TratamentoText';
 import { GoogleGenerativeAIText } from '../../services/GenerativeText';
+import { adicionarHistoricoAlimentar } from '../../services/Servicosbanco';
 
 export const Alimentacao = () => {
     const [foodInput, setFoodInput] = useState('');
-    const [calories, setCalories] = useState(null);
+    const [calories, setCalories] = useState([]);
     const [loading, setLoading] = useState(false);
     const [randomMessage, setRandomMessage] = useState('');
+    const [objetoHistorico, setObjetoHistorico] = useState({});
+    console.log('calories...', calories);
+    
 
     const getRandomMessage = () => {
         const randomIndex = Math.floor(Math.random() * ArrayTextoEsperaIA.length);
         setRandomMessage(ArrayTextoEsperaIA[randomIndex].texto);
     };
-
-    let stringAjustada = `A refeição ${foodInput} tem aproximadamnte quantas calorias? `
 
     const handleCalculateCalories = async () => {
         try {
@@ -32,9 +34,10 @@ export const Alimentacao = () => {
 
             }
             setLoading(true);
-            const resp = await GoogleGenerativeAIText(stringAjustada);
+            const resp = await GoogleGenerativeAIText(foodInput);
             setCalories(resp);
-            TratamentoText(resp, foodInput);
+            const textTratado = await TratamentoText(resp, foodInput);
+            setObjetoHistorico(textTratado);
             setLoading(false);
         } catch (err) {
             console.log('Erro calculando calorias', err);
@@ -43,7 +46,12 @@ export const Alimentacao = () => {
 
     const addHistory = () => {
         Alert.alert('Sucesso', 'Refeição adicionada ao seu historico com sucesso!');
+        adicionarHistoricoAlimentar(objetoHistorico)
     }
+
+    const formatarCalorias = (calories) => {
+        return calories?.map(item => `${item.nome} tem ${item.calorias} calorias.`).join('\n');
+    };
 
     return (
         <SafeAreaView style={styles.container}>
@@ -77,7 +85,11 @@ export const Alimentacao = () => {
                 {calories && (
                     <View style={styles.resultContainer}>
                         <ScrollView style={styles.scrollView}>
-                            <Text style={styles.resultText}>{calories}</Text>
+                            {calories?.alimentos?.map((alimento, index) => (
+                                <Text key={index} style={styles.resultText}>
+                                    {alimento.nome} tem {alimento.calorias} calorias.
+                                </Text>
+                            ))}
                         </ScrollView>
                     </View>
                 )}

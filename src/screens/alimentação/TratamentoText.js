@@ -1,20 +1,44 @@
-export const TratamentoText = (text, foodInput) => {
-    console.log('text recebido', text);
-    console.log('foodInput', foodInput);
+export const TratamentoText = async (text) => {
+    // Tenta analisar a resposta como JSON
+    let alimentos = [];
+    let calorias = 'Calorias não encontradas';
+    
+    try {
+        const resposta = JSON.parse(text);
 
-    // Expressão regular para capturar calorias com possível intervalo (ex: "120-150")
-    const caloriasRegex = /(\d+)\s*(-\s*\d+)?/;
+        // Verifica se a resposta contém o campo "alimentos"
+        if (resposta.alimentos && Array.isArray(resposta.alimentos)) {
+            alimentos = resposta.alimentos.map(item => ({
+                nome: item.nome,
+                calorias: item.calorias
+            }));
+            calorias = alimentos.map(item => item.calorias).reduce((a, b) => a + b, 0);
+        }
+    } catch (err) {
+        console.error('Erro ao processar a resposta:', err);
+        return { alimento: 'Alimento não encontrado', calorias, data: '', hora: '' };
+    }
 
-    // Tentativa de extrair as calorias
-    const caloriasMatch = text.match(caloriasRegex);
-    let calorias = caloriasMatch ? caloriasMatch[0].replace(/\s/g, '') : 'Calorias não encontradas';
+    // Se não encontrou alimentos, utilize uma mensagem padrão
+    if (alimentos.length === 0) {
+        return { alimento: 'Alimento não encontrado', calorias, data: '', hora: '' };
+    }
 
-    // O alimento é diretamente o foodInput, já que não é extraído da frase calorias
-    let alimento = foodInput || 'Alimento não encontrado';
+    // Pega a data e a hora
+    let dataNow = new Date();
+    
+    // Trata dataNow = ddmmyyyy (string) e horaNow = hhmm (string) para o formato correto
+    let data = dataNow.getDate().toString().padStart(2, '0') +
+        (dataNow.getMonth() + 1).toString().padStart(2, '0') +
+        dataNow.getFullYear().toString();
 
-    // Log dos resultados
-    console.log('Calorias:', calorias);
-    console.log('Alimento:', alimento);
+    let hora = dataNow.getHours().toString().padStart(2, '0') +
+        dataNow.getMinutes().toString().padStart(2, '0');
 
-    return { calorias, alimento };
-}
+    // console.log('Alimentos:', alimentos);
+    // console.log('Calorias:', calorias);
+    // console.log('Data:', data);
+    // console.log('Hora:', hora);
+
+    return { alimentos, calorias, data, hora };
+};
